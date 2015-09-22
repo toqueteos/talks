@@ -1,0 +1,8 @@
+......................................................................
+panic: send on closed channel
+
+goroutine 23 [running]:
+main.produceN(0x8202560c0, 0x5)
+	/private/var/folders/8p/y2m847j11v5f4sv9_f08b6lm0000gn/T/compile7.go:71 +0x92
+created by main.main
+	/private/var/folders/8p/y2m847j11v5f4sv9_f08b6lm0000gn/T/compile7.go:26 +0xd9

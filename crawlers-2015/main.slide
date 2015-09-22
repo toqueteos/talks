@@ -1,0 +1,359 @@
+Processing big amounts of data one step at a time
+19:30 21 Sep 2015
+Tags: go golang
+
+Carlos Cobo
+
+carlos@tyba.com
+toqueteos@gmail.com
+
+@toqueteos
+
+* Who am I?
+
+- Crazy programmer
+- Go dev for almost 4 years (since r58)
+- Also: Rust, Python, C# (Unity3D) and a tad of Java (dark times, hello Minecraft!)
+- Pony gifter (hello Franky!)
+
+.link http://tyba.com/company/tyba/ And this is the Tyba team, my new family
+
+Pictures time!
+
+.link http://127.0.0.1:3999/images/me_public.png This is who you might know
+.link http://127.0.0.1:3999/images/me_private.png This is who I really am
+
+* About this talk
+
+Not another Go intro talk!
+
+*Level*: Something in between intermediate andd advanced. Interesting-ish.
+
+*Assumptions*:
+
+- You all know what are goroutines and channels!
+- You all know the properties of goroutines and channels!
+
+Don't be afraid to raise your hand!
+
+* Let's start
+
+* Concurrent programming facts
+
+- Go has two concurrency primitives: channels and goroutines
+- Concurrent programming is still hard, not hardcore like pthreads
+
+.image images/gopherbw.png _ 400
+
+* Basic scenario: 1 producer, 1 consumer
+
+.code code/basic.go /STARTDEF OMIT/,/ENDDEF OMIT/
+.play code/basic.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
+
+* Basic scenario: 1 producer, 1 consumer (cont.)
+
+.code code/basic.go /STARTPRODUCE OMIT/,/ENDPRODUCE OMIT/
+.code code/basic.go /STARTCONSUME OMIT/,/ENDCONSUME OMIT/
+
+* Basic stats
+
+.play code/basic_stats.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
+
+* Wrapping up
+
+- Single producer
+- Single consumer
+- Nothing new, fancy or fun
+- It's basically just a for loop
+
+* M:N Producer-Consumer
+
+* MANY producers, 1 consumer
+
+Let's start by using more producers...
+
+.code code/np_1c.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
+
+* Problems arise
+
+We haven't changed `producerN` body.
+
+.play code/np_1c.go /STARTPRODUCE OMIT/,/ENDPRODUCE OMIT/
+
+It'll work most of the time, but sometimes we'll get a panic.
+
+.code code/np_1c_panic.txt
+
+* Solving the problem: sync.WaitGroup
+
+We *MUST* wait until *ALL* producers are done.
+
+.play code/np_1c_fix.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
+
+* Solving the problem: sync.WaitGroup (cont.)
+
+Channel is now closed once, just after all work is done.
+
+.play code/np_1c_fix.go /STARTPRODUCE_FIX OMIT/,/ENDPRODUCE_FIX OMIT/
+
+* 1 producers, MANY consumer
+
+Start just one producer, multiple consumers reading from channel.
+
+Same approach:
+
+- `WaitGroup` for consumers.
+- Everyone uses `for .. range` on channel.
+- `close(ch)` only once after all work is done.
+- Not rocket science.
+
+* MANY producers, MANY consumer
+
+Another step forward!
+
+.code code/mp_nc.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
+
+* Show me the code!
+
+.code code/mp_nc.go /STARTPRODUCE OMIT/,/ENDPRODUCE OMIT/
+
+.code code/mp_nc.go /STARTCONSUME OMIT/,/ENDCONSUME OMIT/
+
+Not showing `doConsume`, it's our previous `consume` func.
+
+* Problems arise, again
+
+Data races everywhere!
+
+.play code/mp_nc.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
+
+How can we solve it?
+
+* We need better tools
+
+* Solution 1: Mutexes all the way!
+
+We can carefully add locks wherever is needed! _Now_we_have_two_problems_?_
+
+.play code/mp_nc_mutex.go /STARTMUTEX OMIT/,/ENDMUTEX OMIT/
+
+* Solution 2: Atomic all the way!
+
+Because we dealing with integers we can just use `sync/atomic`.
+
+.code code/mp_nc_atomic.go /STARTSTATS OMIT/,/ENDSTATS OMIT/
+
+.play code/mp_nc_atomic.go /STARTATOMIC OMIT/,/ENDATOMIC OMIT/
+
+Can we go home now?
+
+* Mutexes/Atomic all the way?
+
+What if we were modifying a map, slice or a custom data structure?
+
+Nobody wants lock contention.
+
+What would Rob say? We can do better!
+
+* Better tools
+
+* Are there any good practices for this?
+
+Yes!
+
+.link http://talks.golang.org/2012/concurrency.slide (talk 2012) Go Concurrency Patterns, by Rob Pike
+
+.link http://talks.golang.org/2012/chat.slide (talk 2012) Go: code that grows with grace, by Andrew Gerrand
+
+.link http://talks.golang.org/2013/advconc.slide (talk 2013) Advanced Go Concurrency Patterns, by Sameer Ajmani
+
+.link https://blog.golang.org/pipelines (blog 2014) Go Concurrency Patterns: Pipelines and cancellation, by Sameer Ajmani
+
+* Lesson 1: Pipelines
+
+- Informally, a pipeline is a series of stages connected by channels, where each stage is a group of goroutines running the same function.
+
+.image images/sieve.gif
+
+Image taken from:
+
+.link https://swtch.com/~rsc/thread/ Bell Labs and CSP Threads
+
+* Lesson 2: chan chan T
+
+Basically, *request-reply* channels.
+
+.code code/chanchan.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
+
+* Lesson 3: nil channels
+
+This is perfect for *pausable* channels.
+
+.code code/nilchan.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
+
+A nil channel *ALWAYS* blocks.
+
+* Final step(s)
+
+* Let's design a big thing!
+
+Let's analyze GitHub. *ALL*OF*IT*.
+
+GitHub in figures:
+
+- 27+ million repositories.
+- 11+ million users.
+- A *BAZILLION* megabytes of data.
+
+.link https://github.com/about/press GitHub figures source
+
+Big enough?
+
+At Tyba we do this in *10*days*.
+
+* Objetives
+
+- Download all repositories.
+- Save commit count.
+- Analyze all files.
+- Determine every file's language.
+- Aggregate results by repository, language and user.
+
+# Because of time issues, we are gonna focus on the first three.
+
+* Assumptions
+
+- We know a bit of Go.
+- We do have an updated list of all public GitHub repositories.
+- We do have a git library, not necessarily in Go.
+- We do have a bunch of beefy machines.
+- We don't need to store the repository on disk. *This*is*a*plus*.
+
+* Requirements
+
+- We don't know how many repositories we can download & analyze at once.
+
+NOTE: git protocol does is a streaming protocol, we don't know the size of each repo.
+
+- Ideally, we should be running 24/7 at 100% capacity. Hard to achieve.
+
+* Doing more than one thing at a time
+
+We don't need to wait to start downloading repositories.
+
+We can even analyze as we go!
+
+*Decision*:
+
+- Save URLs into a queue
+- Download and analyze repositories as we go
+- Store results in database
+
+* Queues!
+
+Process will fan out to multiple machines.
+
+An in-memory queue (channel-backed) won't work.
+
+*Choose*one*:
+
+- *Beanstalk*
+- *Redis*
+- ActiveMQ
+- Celery
+- ...
+- Almost anyone from http://queues.io
+
+* Prototype
+
+.code code/final1.go /STARTDEF OMIT/,/ENDDEF OMIT/
+.code code/final1.go /STARTRUN OMIT/,/ENDRUN OMIT/
+
+* Prototype (cont.)
+
+.code code/final1.go /STARTEAT OMIT/,/ENDEAT OMIT/
+.code code/final1.go /STARTCONSUME OMIT/,/ENDCONSUME OMIT/
+
+* Prototype (cont.)
+
+.code code/final1.go /STARTFEED OMIT/,/ENDFEED OMIT/
+
+* Prototype (cont.)
+
+.code code/final1.go /STARTISPAUSED OMIT/,/ENDISPAUSED OMIT/
+.code code/final1.go /STARTLOOP OMIT/,/ENDLOOP OMIT/
+
+* Worker
+
+Works similar to `Consumer`:
+
+- Loop with loads of channels to wait for status/stop/pause/resume signals
+- Feed mechanism uses `nil`chan` pattern
+- Extra feature: heuristics for language detection
+
+We end up having multiple `loop` patterns nested everywhere.
+
+No mutexes, no data races.
+
+* Analyzing code
+
+Language detection:
+
+- Not so trivial as one might think initially.
+- We can analyze extensions and when in doubt contents too.
+- Regexp are a bad idea, believe me.
+
+We improved language detection speed by a factor of 1000x by not using `regexp` .
+
+It's not `regexp` 's fault!
+
+.link https://github.com/toqueteos/substring A little project of mine
+
+How does GitHub do it?
+
+.link https://github.com/github/linguist GitHub uses a Ruby thingy, too damn slow
+
+* Storing it
+
+Dead simple.
+
+- Whatever comes out, we store it.
+- Especially size so we can improve next crawl.
+- Only aggregation queries are left.
+
+* A bazillion other things
+
+There's countless things we can do now:
+
+- *Person*matching.* Git provides just a Name and Email which can be fake.
+- *Ecosystem*detection.* We may want to aggregate results by people using jQuery or Python or.. anything!
+- *Analyze*language*trends.*
+
+NOTE: Person matching it's a really hard problem! Could have one or two talks on its own.
+
+But we are out of time. Maybe next time?
+
+* The End?
+
+* Aside: parsing data
+
+JSON is all over the place, your best friends are:
+
+.link https://github.com/ChimeraCoder/gojson
+.link http://gojson.com
+
+Same for HTML, jQuery-like traversing is awesome:
+
+.link https://github.com/PuerkitoBio/goquery
+
+* Aside: caching data
+
+The abusing days are over, there's rate limits everywhere.
+
+Gotta cache 'em all!
+
+.link https://github.com/peterbourgon/diskv
+.link https://github.com/gregjones/httpcache
+.link http://github.com/mcuadros/go-mgo-cache
+
+* The End!
