@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Rust Workshop</title>
+
+    
+    <link rel="stylesheet" href="//doc.rust-lang.org/rust.css">
+<link rel="stylesheet" href="sliderust.css">
+<script src="sliderust.js"></script>
+
+
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+    <h1 class="title">Rust Workshop</h1>
+    <p>Carlos Cobo Barredo</p>
+
+<p><a href="https://github.com/toqueteos">@toqueteos</a></p>
+
+<p>November 11, 2016</p>
+
+<h1 id='what-is-this-workshop-all-about' class='section-header'><a href='#what-is-this-workshop-all-about'>What is this workshop all about?</a></h1>
+<ul>
+<li>Not about JavaScript</li>
+<li>Not full of cat pictures</li>
+<li>Learning something new you probably <strong>won&#39;t use!</strong></li>
+</ul>
+
+<p><img src="images/kawaii_eyes_cat.jpg" alt="Kawaii Eyes Cat"></p>
+
+<h1 id='first-doubts' class='section-header'><a href='#first-doubts'>First doubts</a></h1>
+<p>Not this Rust!</p>
+
+<p><img src="images/play_rust.png" alt="Rust logo (videogame)"></p>
+
+<p><strong>FUNNY FACT:</strong> Every now and then a post about Rust (videogame) players appears on <a href="https://reddit.com/r/rust">/r/rust</a>. People just roll with it.</p>
+
+<h1 id='rust-is' class='section-header'><a href='#rust-is'>Rust is</a></h1>
+<p>a systems programming language that</p>
+
+<ul>
+<li>runs blazingly fast,</li>
+<li>prevents segfaults,</li>
+<li>and guarantees thread safety.</li>
+</ul>
+
+<p><img src="images/rust_logo.svg" alt="Rust logo (programming language)"></p>
+
+<p>Truth is.. You probably don&#39;t care. But that&#39;s OK!</p>
+
+<h1 id='a-true-c-replacement' class='section-header'><a href='#a-true-c-replacement'>A true C++ replacement</a></h1>
+<pre><code class="language-text">error: mismatched types: expected `&amp;&#39;a html5ever::tokenizer::Tokenizer&lt;html5ever::tree_builder::TreeBuilder&lt;dom::node::TrustedNodeAddress,dom::servohtmlparser::Sink&gt;&gt;`, found `&amp;core::cell::RefCell&lt;html5ever::tokenizer::Tokenizer&lt;html5ever::tree_builder::TreeBuilder&lt;dom::node::TrustedNodeAddress,dom::servohtmlparser::Sink&gt;&gt;&gt;`
+</code></pre>
+
+<h1 id='hello-rust' class='section-header'><a href='#hello-rust'>Hello, Rust</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hello, world!&quot;</span>);
+}</pre>
+
+<pre><code class="language-norust">&gt; Hello, world!
+</code></pre>
+
+<h1 id='the-end' class='section-header'><a href='#the-end'>The End</a></h1>
+<p>That&#39;s all I have.</p>
+
+<p><img src="images/rave.gif" alt="Ron Paul: It&#39;s happening montage"></p>
+
+<h1 id='history' class='section-header'><a href='#history'>History</a></h1>
+<ul>
+<li>Started as a personal project in 2006 by Graydon Hoare (now at Microsoft)</li>
+<li>First compiler written in OCaml</li>
+<li>Mozilla took over the project 3 years later</li>
+<li>Compiler rewritten in Rust itself in 2010</li>
+</ul>
+
+<h1 id='why-rust-at-mozilla' class='section-header'><a href='#why-rust-at-mozilla'>Why Rust at Mozilla?</a></h1>
+<ul>
+<li>New experimental, highly parallel browser engine: Servo</li>
+<li>Browsers evolve in a hostile, highly concurrent environment</li>
+<li>Most security problems arise from memory safetey and concurrency issues</li>
+<li>Thus a safer, saner systems language is needed, with built-in concurrency</li>
+</ul>
+
+<h1 id='why-rust-for-you' class='section-header'><a href='#why-rust-for-you'>Why Rust, for you?</a></h1>
+<ul>
+<li>High-level features</li>
+<li>Low-level control</li>
+<li>Powerful FFI</li>
+<li>Direct memory control</li>
+<li>Guaranteed memory safety</li>
+<li>Concurrency without data races</li>
+<li>Zero cost abstractions</li>
+</ul>
+
+<p><img src="images/ok_kid.gif" alt="OK kid positively nodding"></p>
+
+<h1 id='high-level-features' class='section-header'><a href='#high-level-features'>High-level features</a></h1>
+<ul>
+<li>Type inference</li>
+<li>Closures</li>
+<li>Iterators</li>
+<li>Algebraic data types</li>
+<li>Pattern matching</li>
+<li>Traits (= type classes)</li>
+<li>Macros</li>
+<li>Modules</li>
+</ul>
+
+<p><img src="images/mind_blown.gif" alt="Mind blown animation"></p>
+
+<h1 id='low-level-control' class='section-header'><a href='#low-level-control'>Low-level control</a></h1>
+<ul>
+<li>Ability to trade compiler-enforced safety for lower-level control</li>
+<li>Eg. dereferencing raw pointer, pointer arithmetic, calling external code</li>
+<li>Such unsafe code must be surrounded by an <code>unsafe</code> block</li>
+<li>Thus easy to spot during code review or when debugging</li>
+</ul>
+
+<p><img src="images/info_nuke.gif" alt="Infomercial Nuke montage"></p>
+
+<h1 id='powerful-ffi' class='section-header'><a href='#powerful-ffi'>Powerful FFI</a></h1>
+<ul>
+<li>Call Rust code from other languages</li>
+<li>Call <em>&quot;C code&quot;</em> from Rust</li>
+</ul>
+
+<p><em>&quot;C code&quot;</em>? Bindings for libraries exposing a C interface</p>
+
+<blockquote>
+<p>FFI: Foreign Function Interface</p>
+</blockquote>
+
+<p><em>No GIF on this one, sorry.</em></p>
+
+<h1 id='direct-memory-control' class='section-header'><a href='#direct-memory-control'>Direct memory control</a></h1>
+<ul>
+<li>No garbage collector</li>
+<li>No runtime overhead</li>
+<li>No unpredictable pauses in execution</li>
+<li>Stack and heap allocations</li>
+</ul>
+
+<p><img src="images/homer_tetris.gif" alt="Homer Hallucinating about Tetris"></p>
+
+<h1 id='recap' class='section-header'><a href='#recap'>Recap</a></h1>
+<p>:blank:</p>
+
+<h1 id='recap-1' class='section-header'><a href='#recap-1'>Recap</a></h1>
+<p><img src="images/tldr.gif" alt="DIDNT READ LOL"></p>
+
+<p><small>
+    <em>
+        <a href="https://www.youtube.com/watch?v=GVNZtlI-kqU">source</a>
+    </em>
+</small></p>
+
+<p>You were just looking at the GIFs, were you?</p>
+
+<h1 id='diving-in-neck-first' class='section-header'><a href='#diving-in-neck-first'>Diving in, neck first</a></h1>
+<ul>
+<li>Primitive types</li>
+<li>Strings</li>
+<li>Variable bindings</li>
+<li>Functions</li>
+<li>Printing stuff</li>
+<li>Control structures</li>
+<li>Arrays, vectors and slices</li>
+<li>Structs and methods</li>
+<li>Enums</li>
+<li>Pattern matching</li>
+</ul>
+
+<h1 id='numeric-types' class='section-header'><a href='#numeric-types'>Numeric types</a></h1>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Example</th>
+    </tr>
+    <tr>
+        <td>(Un)Signed integer</td>
+        <td><code>isize</code>, <code>usize</code></td>
+        <td><code>-1337isize</code>, <code>9_001usize</code></td>
+    </tr>
+    <tr>
+        <td>Unsigned integers</td>
+        <td><code>u8</code>, <code>u16</code>, <code>u32</code>, <code>u64</code></td>
+        <td><code>0b0010_0110u8</code>, <code>0xbeefu16</code>, <code>134_217_728u32</code>, ...</td>
+    </tr>
+    <tr>
+        <td>Signed integers</td>
+        <td><code>i8</code>, <code>i16</code>, <code>i32</code>, <code>i64</code></td>
+        <td><code>-63i8</code>, ...</td>
+    </tr>
+    <tr>
+        <td>Floating point</td>
+        <td><code>f32</code>, <code>f64</code></td>
+        <td><code>2.7182f32</code>, <code>-3.1_415f32</code></td>
+    </tr>
+</table>
+
+<h1 id='primitive-types' class='section-header'><a href='#primitive-types'>Primitive types</a></h1>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Example</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>Unit</td>
+        <td><code>()</code></td>
+        <td><code>()</code></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Boolean</td>
+        <td><code>bool</code></td>
+        <td><code>true</code>, <code>false</code></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Array</td>
+        <td><code>[T]</code></td>
+        <td><code>[1, 2, 3]</code>
+        <td>fixed size</td>
+    </tr>
+    <tr>
+        <td>Slice</td>
+        <td><code>&[T]</code></td>
+        <td><code>&[1, 2, 3]</code>
+        <td><em>'view'</em> into an array</td>
+    </tr>
+    <tr>
+        <td>Tuple</td>
+        <td><code>(A, B, C...)</code></td>
+        <td><code>(42u32, 1337i)</code></td>
+        <td></td>
+    </tr>
+
+</table>
+
+<h1 id='textual-types' class='section-header'><a href='#textual-types'>Textual types</a></h1>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Example</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>Unicode scalar value</td>
+        <td><code>char</code></td>
+        <td><code>'a'</code></td>
+        <td>32-bit unsigned word</td>
+    </tr>
+    <tr>
+        <td>Unicode scalar array</td>
+        <td><code>[char]</code></td>
+        <td><code>['a', 'b', 'c']</code></td>
+        <td>~ UTF-32 string</td>
+    </tr>
+    <tr>
+        <td>Unicode string</td>
+        <td><code>str</code>, <code>String</code></td>
+        <td><code>"rust is cool"</code></td>
+        <td>array of 8-bit unsigned bytes<br>
+            ~ sequence of UTF-8 codepoints</td>
+    </tr>
+</table>
+
+<p>Most of the time you&#39;ll only use <code>&amp;str</code> and <code>String</code>.</p>
+
+<h1 id='why-str-vs-string' class='section-header'><a href='#why-str-vs-string'>Why <code>&amp;str</code> vs <code>String</code>?</a></h1>
+<ul>
+<li><code>&amp;&#39;static str</code> is <strong>inmutable</strong> and is stored directly on the final binary. Don&#39;t panic yet!</li>
+<li><code>&amp;str</code> is <strong>inmutable</strong>, a buffer and a length.</li>
+<li><code>String</code> is <strong>mutable</strong>, a buffer, a length and a capacity.</li>
+</ul>
+
+<p>Basically, performance.</p>
+
+<ul>
+<li>Going from <code>&amp;str</code> to <code>String</code> is <strong>expensive</strong>.</li>
+<li>Going from <code>String</code> to <code>&amp;str</code> is <strong>cheap</strong>.</li>
+</ul>
+
+<p>There&#39;s <a href="http://is.gd/hQ7M5O">a lot more</a>, like where they get allocated, but we don&#39;t care for now.</p>
+
+<h1 id='strings-common-mistakes' class='section-header'><a href='#strings-common-mistakes'>Strings: common mistakes</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;hello&quot;</span>;
+
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;The first letter of s is {}&quot;</span>, <span class='ident'>s</span>[<span class='number'>0</span>]);</pre>
+
+<p>This <strong>won&#39;t work</strong>.</p>
+
+<h1 id='strings-utf-8' class='section-header'><a href='#strings-utf-8'>Strings: UTF-8</a></h1>
+<p>Why? See it for yourself</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>hachiko</span> <span class='op'>=</span> <span class='string'>&quot;忠犬ハチ公&quot;</span>;
+
+<span class='kw'>for</span> <span class='ident'>b</span> <span class='kw'>in</span> <span class='ident'>hachiko</span>.<span class='ident'>as_bytes</span>() {
+    <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;{}, &quot;</span>, <span class='ident'>b</span>);
+}
+<span class='comment'>// Will print:</span>
+<span class='comment'>// 229, 191, 160, 231, 138, 172, 227, 131, 143, 227, 131, 129, 229, 133, 172,</span>
+
+<span class='kw'>for</span> <span class='ident'>c</span> <span class='kw'>in</span> <span class='ident'>hachiko</span>.<span class='ident'>chars</span>() {
+    <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;{}, &quot;</span>, <span class='ident'>c</span>);
+}
+<span class='comment'>// Will print:</span>
+<span class='comment'>// 忠, 犬, ハ, チ, 公,</span></pre>
+
+<p><a href="http://is.gd/eKksRX">Playpen</a></p>
+
+<h1 id='break-time' class='section-header'><a href='#break-time'>Break time!</a></h1>
+<p><strong>No more tables ahead.</strong></p>
+
+<p>Question time! Everything clear until now?</p>
+
+<p>Don&#39;t be like this:</p>
+
+<p><img src="images/lost.gif" alt=""></p>
+
+<h1 id='variable-bindings' class='section-header'><a href='#variable-bindings'>Variable bindings</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>5</span>;
+
+<span class='comment'>// type annotations are (usually) optional</span>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5i32</span>;
+
+<span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='string'>&quot;foo!&quot;</span>;</pre>
+
+<h1 id='mutability-13' class='section-header'><a href='#mutability-13'>Mutability (1/3)</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5i32</span>;
+
+<span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>; <span class='comment'>// error</span></pre>
+
+<h1 id='mutability-23' class='section-header'><a href='#mutability-23'>Mutability (2/3)</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5i32</span>;
+
+<span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>; <span class='comment'>// ok</span></pre>
+
+<h1 id='mutability-33' class='section-header'><a href='#mutability-33'>Mutability (3/3)</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5i32</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>x</span>;
+
+<span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>y</span> <span class='op'>+</span> <span class='number'>1</span>;</pre>
+
+<p>Will this work?</p>
+
+<h1 id='mutability-nan3' class='section-header'><a href='#mutability-nan3'>Mutability (NaN/3)</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5i32</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>x</span>;
+
+<span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>y</span> <span class='op'>+</span> <span class='number'>1</span>; <span class='comment'>// ok</span></pre>
+
+<p>Will this work? <strong>YES.</strong></p>
+
+<p><img src="images/believe.gif" alt=""></p>
+
+<p><a href="http://is.gd/7NBoAk">Playpen</a></p>
+
+<h1 id='functions' class='section-header'><a href='#functions'>Functions</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>do_stuff</span>(<span class='number'>2</span>, <span class='number'>3</span>);
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;result is {}&quot;</span>, <span class='ident'>res</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>do_stuff</span>(<span class='ident'>a</span>: <span class='ident'>int</span>, <span class='ident'>b</span>: <span class='ident'>int</span>) <span class='op'>-&gt;</span> <span class='ident'>int</span> {
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>a</span> <span class='op'>+</span> <span class='ident'>b</span>;
+
+    <span class='kw'>return</span> <span class='ident'>c</span> <span class='op'>*</span> <span class='number'>2</span>;
+}</pre>
+
+<h1 id='functions-1' class='section-header'><a href='#functions-1'>Functions</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>do_stuff</span>(<span class='ident'>a</span>: <span class='ident'>int</span>, <span class='ident'>b</span>: <span class='ident'>int</span>) <span class='op'>-&gt;</span> <span class='ident'>int</span> {
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>a</span> <span class='op'>+</span> <span class='ident'>b</span>;
+    <span class='kw'>return</span> <span class='ident'>c</span> <span class='op'>*</span> <span class='number'>2</span>;
+}
+
+<span class='kw'>fn</span> <span class='ident'>do_same_stuff</span>(<span class='ident'>a</span>: <span class='ident'>int</span>, <span class='ident'>b</span>: <span class='ident'>int</span>) <span class='op'>-&gt;</span> <span class='ident'>int</span> {
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>a</span> <span class='op'>+</span> <span class='ident'>b</span>;
+    <span class='ident'>c</span> <span class='op'>*</span> <span class='number'>2</span>
+}</pre>
+
+<p>WAT</p>
+
+<h1 id='printing-stuff' class='section-header'><a href='#printing-stuff'>Printing stuff</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;Curro&quot;</span>;
+    <span class='kw'>let</span> <span class='ident'>age</span> <span class='op'>=</span> <span class='number'>40</span>;
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} is {}&quot;</span>, <span class='ident'>name</span>, <span class='ident'>age</span>);
+}</pre>
+
+<blockquote>
+<p><code>println!()</code> is actually a macro, not a function.</p>
+</blockquote>
+
+<h1 id='printing-stuff-1' class='section-header'><a href='#printing-stuff-1'>Printing stuff</a></h1>
+<p>We can re-order arguments by putting their index inside the braces.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;Curro&quot;</span>;
+    <span class='kw'>let</span> <span class='ident'>age</span> <span class='op'>=</span> <span class='number'>40</span>;
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{1} is {0}&quot;</span>, <span class='ident'>age</span>, <span class='ident'>name</span>);
+}</pre>
+
+<h1 id='conditionals' class='section-header'><a href='#conditionals'>Conditionals</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>if</span> <span class='ident'>age</span> <span class='op'>&gt;</span> <span class='number'>18</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Have a beer!&quot;</span>);
+} <span class='kw'>else</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Sorry, no beer for you.&quot;</span>);
+}</pre>
+
+<blockquote>
+<p>No parenthesis around the condition!</p>
+</blockquote>
+
+<h1 id='conditionals-the-ugly' class='section-header'><a href='#conditionals-the-ugly'>Conditionals: The ugly</a></h1>
+<p>Who hasn&#39;t seen/written something like this?</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>message</span> <span class='op'>=</span> <span class='string'>&quot;Never seen in production :joy:&quot;</span>;
+<span class='kw'>if</span> <span class='ident'>health</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
+    <span class='ident'>message</span> <span class='op'>=</span> <span class='string'>&quot;Alive&quot;</span>;
+} <span class='kw'>else</span> {
+    <span class='ident'>message</span> <span class='op'>=</span> <span class='string'>&quot;Dead&quot;</span>;
+};
+
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Status: {}&quot;</span>, <span class='ident'>message</span>);</pre>
+
+<h1 id='conditionals-the-cool' class='section-header'><a href='#conditionals-the-cool'>Conditionals: The cool</a></h1>
+<p><code>if/else</code> is an expression!</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>message</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>health</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
+    <span class='string'>&quot;Alive&quot;</span>
+} <span class='kw'>else</span> {
+    <span class='string'>&quot;Dead&quot;</span>
+};
+
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Status: {}&quot;</span>, <span class='ident'>message</span>);</pre>
+
+<h1 id='operators' class='section-header'><a href='#operators'>Operators</a></h1>
+<p>The <a href="https://doc.rust-lang.org/reference.html#unary-operator-expressions">usual</a> ones.</p>
+
+<p><strong>GOTCHA:</strong> There&#39;s no increment/decrement!</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='number'>2i32</span>;
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='op'>-</span><span class='number'>3i32</span>;
+
+<span class='ident'>a</span> <span class='op'>+=</span> <span class='number'>1</span>;
+<span class='ident'>b</span> <span class='op'>-=</span> <span class='number'>1</span>;
+
+<span class='comment'>// Won&#39;t work:</span>
+<span class='comment'>// a++</span>
+<span class='comment'>// b--</span></pre>
+
+<h1 id='while' class='section-header'><a href='#while'>While</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>while</span> <span class='ident'>x</span> <span class='op'>&lt;</span> <span class='number'>10</span> {
+    <span class='comment'>// do stuff</span>
+}</pre>
+
+<h1 id='loop' class='section-header'><a href='#loop'>Loop</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>loop</span> {
+    <span class='comment'>// do stuff</span>
+}</pre>
+
+<p>Same as <code>while true</code> but generates better code for some cases!</p>
+
+<h1 id='for' class='section-header'><a href='#for'>For</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> <span class='ident'>var</span> <span class='kw'>in</span> <span class='ident'>expression</span> {
+    <span class='ident'>code</span>
+}</pre>
+
+<blockquote>
+<p><code>expression</code> must be an <code>Iterator</code> (that&#39;s for another day).</p>
+</blockquote>
+
+<h1 id='for-1' class='section-header'><a href='#for-1'>For</a></h1>
+<p>Classic for loop:</p>
+
+<pre><code class="language-c">for (int i = 1; i &lt; 10; i++) {
+    printf(&quot;%d\n&quot;, i);
+}
+</code></pre>
+
+<p>In Rust:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> <span class='ident'>number</span> <span class='kw'>in</span> <span class='number'>1</span>..<span class='number'>10</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>number</span>)
+}</pre>
+
+<h1 id='break-time-1' class='section-header'><a href='#break-time-1'>Break time!</a></h1>
+<p><img src="images/awesome.png" alt="Everything is awesome. The LEGO Movie"></p>
+
+<h1 id='cargo-a-super-fast-introduction' class='section-header'><a href='#cargo-a-super-fast-introduction'>Cargo: A super fast introduction</a></h1>
+<p>Cargo is Rust&#39;s <strong>one and only</strong> package manager. It:</p>
+
+<ul>
+<li>gets and compiles external dependencies</li>
+<li>builds your projects, also can run them if you want</li>
+<li>ensures you’ll always get a repeatable build</li>
+<li>runs your tests</li>
+<li>runs your benchmarks</li>
+<li>runs any other command you want (since v1.5), if that&#39;s your thing</li>
+</ul>
+
+<p>Use Cargo for all your projects.</p>
+
+<h1 id='cargo-getting-started' class='section-header'><a href='#cargo-getting-started'>Cargo: Getting started</a></h1>
+<p>Hurray, yet another package manager <strong>YOU</strong> have to learn!</p>
+
+<p>Good news is, we don&#39;t care right now.</p>
+
+<p>We just want to run some Rust code!</p>
+
+<h1 id='cargo-creating-a-project' class='section-header'><a href='#cargo-creating-a-project'>Cargo: Creating a project</a></h1>
+<pre><code class="language-norust">$ cargo new hello_world --bin
+$ cd hello_world
+$ tree -i -f .
+.
+./Cargo.toml
+./src
+./src/main.rs
+
+1 directory, 2 files
+</code></pre>
+
+<h1 id='cargo-project-done-now-what' class='section-header'><a href='#cargo-project-done-now-what'>Cargo: Project done, now what?</a></h1>
+<pre><code class="language-norust">$ cargo run
+   Compiling hello_world v0.1.0 (file:///tmp/code/rust/hello_world)
+     Running `target/debug/hello_world`
+Hello, world!
+</code></pre>
+
+<p>As simple as that!</p>
+
+<h1 id='cargo-run-vs-build' class='section-header'><a href='#cargo-run-vs-build'>Cargo: <code>run</code> vs <code>build</code></a></h1>
+<p>We could also call <code>cargo build</code> and manually run <code>target/debug/hello_world</code>.</p>
+
+<blockquote>
+<p>See that <code>debug</code> on the path? That&#39;s because we didn&#39;t turn on optimizations!</p>
+</blockquote>
+
+<h1 id='exercise-1-fibonacci' class='section-header'><a href='#exercise-1-fibonacci'>Exercise #1: Fibonacci</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>fib</span>(<span class='ident'>n</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
+    <span class='comment'>// HALF A METER BEARD REQUIRED</span>
+    <span class='comment'>// ...</span>
+    <span class='comment'>// DARK ARCANE CODING ARTS</span>
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='ident'>fib</span>(<span class='number'>10</span>); <span class='comment'>// f should be 55</span>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;The 10th Fibonacci number is {}&quot;</span>, <span class='ident'>f</span>);
+}</pre>
+
+<p>You have 5 minutes guys or until everyone gets it right.</p>
+
+<p><a href="http://is.gd/7Y25ik">Solution</a></p>
+
+<h1 id='status-report' class='section-header'><a href='#status-report'>Status report</a></h1>
+<p>Fibonacci was too easy?</p>
+
+<p>Ok, let&#39;s step up our game...</p>
+
+<h1 id='arrays-vectors-and-slices' class='section-header'><a href='#arrays-vectors-and-slices'>Arrays, vectors and slices</a></h1>
+<ul>
+<li>An array is a <strong>fixed-sized</strong> list of elements of the same type</li>
+<li>A vector is a <strong>dynamic, growable</strong> array</li>
+<li>A slice is a reference to an array.</li>
+</ul>
+
+<h1 id='arrays' class='section-header'><a href='#arrays'>Arrays</a></h1>
+<p>An array is a <strong>fixed-sized</strong> list of elements of the same type.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];   <span class='comment'>// a: [i32; 3]</span>
+<span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> [<span class='number'>1u8</span>, <span class='number'>2</span>, <span class='number'>3</span>]; <span class='comment'>// b: [u8; 3]</span>
+
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;a has {} elements&quot;</span>, <span class='ident'>a</span>.<span class='ident'>len</span>());
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;the first element of b is {}&quot;</span>, <span class='ident'>b</span>[<span class='number'>0</span>]);</pre>
+
+<h1 id='vectors' class='section-header'><a href='#vectors'>Vectors</a></h1>
+<p>A vector is a <strong>dynamic, growable</strong> array</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>names</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;Adolfo&quot;</span>, <span class='string'>&quot;Chema&quot;</span>];
+
+<span class='ident'>names</span>.<span class='ident'>push</span>(<span class='string'>&quot;Jose Luis&quot;</span>);
+
+<span class='comment'>// names[2] == &quot;Jose Luis&quot;;</span></pre>
+
+<h1 id='vectors-1' class='section-header'><a href='#vectors-1'>Vectors</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>names</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;Manu&quot;</span>, <span class='string'>&quot;Chickenman&quot;</span>];
+
+<span class='ident'>names</span>.<span class='ident'>push</span>(<span class='string'>&quot;Paco Jones&quot;</span>);</pre>
+
+<p>This <strong>won&#39;t work!</strong></p>
+
+<pre><code class="language-norust">&lt;anon&gt;:5:5: 5:10 error: cannot borrow immutable local variable `names` as mutable
+&lt;anon&gt;:5     names.push(&quot;Paco Jones&quot;);
+             ^~~~~
+&lt;anon&gt;:3:9: 3:14 help: to make the local variable mutable, use `mut` as shown:
+&lt;anon&gt;:      let mut names = vec![&quot;Manu&quot;, &quot;Chickenman&quot;];
+error: aborting due to previous error
+</code></pre>
+
+<p>We forgot the <code>mut</code> so obviously we can&#39;t <code>push</code> into a inmutable vector.</p>
+
+<h1 id='slices' class='section-header'><a href='#slices'>Slices</a></h1>
+<p>A slice is a <strong>reference</strong> to an array.</p>
+
+<p>A slice allows safe and efficient access to a portion of an array without copying.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> [<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>];
+
+<span class='comment'>// A slice containing all of the elements in a</span>
+<span class='kw'>let</span> <span class='ident'>complete</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>a</span>[..];
+
+<span class='comment'>// A slice with just the elements 1, 2, and 3 in a</span>
+<span class='kw'>let</span> <span class='ident'>middle</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>a</span>[<span class='number'>1</span>..<span class='number'>4</span>];</pre>
+
+<h1 id='exercise-2-tic-tac-toe' class='section-header'><a href='#exercise-2-tic-tac-toe'>Exercise #2: Tic Tac Toe</a></h1>
+<p><img alt="Tic Tac Toe" src="images/tic_tac_toe.png" width="200" />
+Rules:</p>
+
+<ul>
+<li>Players randomly draw their sign.</li>
+<li>3x3 board</li>
+</ul>
+
+<p>Time is limited so use these:</p>
+
+<ul>
+<li><a href="https://github.com/toqueteos/rw/archive/master.zip">https://github.com/toqueteos/rw/archive/master.zip</a></li>
+<li><code>git clone https://github.com/toqueteos/rw</code></li>
+</ul>
+
+<h1 id='structs-and-methods' class='section-header'><a href='#structs-and-methods'>Structs and methods</a></h1>
+<ul>
+<li>Structured programming</li>
+<li>Object Oriented Programming</li>
+</ul>
+
+<p><strong>Welcome to 1980!</strong></p>
+
+<h1 id='structs' class='section-header'><a href='#structs'>Structs</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Rectangle</span> {
+    <span class='ident'>width</span>: <span class='ident'>f32</span>,
+    <span class='ident'>height</span>: <span class='ident'>f32</span>
+}
+
+<span class='kw'>struct</span> <span class='ident'>Rocket</span> {
+    <span class='ident'>dead_monkeys</span>: <span class='ident'>i32</span>,
+    <span class='ident'>wheels</span>: <span class='ident'>i32</span>,
+    <span class='ident'>astronauts</span>: <span class='ident'>f64</span>,
+    <span class='ident'>exploded</span>: <span class='ident'>bool</span>
+}</pre>
+
+<h1 id='methods-question' class='section-header'><a href='#methods-question'>Methods: Question</a></h1>
+<p>What&#39;s a <strong>static</strong> method?</p>
+
+<h1 id='methods-question-1' class='section-header'><a href='#methods-question-1'>Methods: Question</a></h1>
+<p>What&#39;s a <strong>static</strong> method?</p>
+
+<p>And a <strong>member</strong> method?</p>
+
+<h1 id='methods' class='section-header'><a href='#methods'>Methods</a></h1>
+<p>Methods (static and members) are defined inside an <code>impl</code> block.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Rectangle</span> {
+    <span class='ident'>width</span>: <span class='ident'>f32</span>,
+    <span class='ident'>height</span>: <span class='ident'>f32</span>
+}
+
+<span class='kw'>impl</span> <span class='ident'>Rectangle</span> {
+    <span class='comment'>// Methods here.</span>
+}
+</pre>
+
+<h1 id='static-methods' class='section-header'><a href='#static-methods'>Static methods</a></h1>
+<p>Static methods are defined this way, and can be called with <code>Type::method_name()</code>.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>impl</span> <span class='ident'>Rectangle</span> {
+    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>width</span>: <span class='ident'>f32</span>, <span class='ident'>height</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='ident'>Rectangle</span> {
+        <span class='ident'>Rectangle</span> { <span class='ident'>width</span>: <span class='ident'>width</span>, <span class='ident'>height</span>: <span class='ident'>height</span> }
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>rect</span> <span class='op'>=</span> <span class='ident'>Rectangle</span>::<span class='ident'>new</span>(<span class='number'>1.2</span>, <span class='number'>4.9</span>);
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>react</span>.<span class='ident'>area</span>());
+}</pre>
+
+<h1 id='member-methods' class='section-header'><a href='#member-methods'>Member methods</a></h1>
+<p>Member methods take a <code>&amp;self</code> parameter, which is a reference to the <code>struct</code> the method is called on.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>impl</span> <span class='ident'>Rectangle</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f32</span> {
+        <span class='self'>self</span>.<span class='ident'>width</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>height</span>
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>rect</span> <span class='op'>=</span> <span class='ident'>Rectangle</span>::<span class='ident'>new</span>(<span class='number'>1.2</span>, <span class='number'>4.9</span>);
+    <span class='kw'>let</span> <span class='ident'>area</span> <span class='op'>=</span> <span class='ident'>react</span>.<span class='ident'>area</span>();
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>area</span>);
+}</pre>
+
+<h1 id='break-time-2' class='section-header'><a href='#break-time-2'>Break time!</a></h1>
+<p>I probably need some water by now...</p>
+
+<p>Come on guys, go to the bathroom.</p>
+
+<p><img src="images/poop_party.gif" alt="Party hard while pooping animation"></p>
+
+<h1 id='guaranteed-memory-safety' class='section-header'><a href='#guaranteed-memory-safety'>Guaranteed memory safety</a></h1>
+<ul>
+<li>No buffer overflows</li>
+<li>No dangling pointers</li>
+</ul>
+
+<h1 id='concurrency-without-data-races' class='section-header'><a href='#concurrency-without-data-races'>Concurrency without data races</a></h1>
+<ul>
+<li>Only immutable data can be shared</li>
+<li>Shared data must remain alive as long as any task might access it</li>
+</ul>
+
+<h1 id='zero-cost-abstractions' class='section-header'><a href='#zero-cost-abstractions'>Zero cost abstractions</a></h1>
+<p>Memory safety is enforced during compilation, there is no runtime overhead.</p>
+
+<h1 id='but-how' class='section-header'><a href='#but-how'>But how?</a></h1>
+<p>Rust is built around 3 concepts:</p>
+
+<ul>
+<li>Lifetime</li>
+<li>Ownership</li>
+<li>Borrowing</li>
+</ul>
+
+<h1 id='lifetimes' class='section-header'><a href='#lifetimes'>Lifetimes</a></h1>
+<p>Time span during which a resource (value) is valid.</p>
+
+<p>Seems trivial. <strong>IT IS NOT</strong>.</p>
+
+<h1 id='lifetimes-1' class='section-header'><a href='#lifetimes-1'>Lifetimes</a></h1>
+<p><img src="images/scope.png" alt="Variable scope visualization"></p>
+
+<ul>
+<li>You can think of it as a scope.</li>
+<li>At the end of its lifetime, a value will be deallocated.</li>
+</ul>
+
+<h1 id='lifetimes-2' class='section-header'><a href='#lifetimes-2'>Lifetimes</a></h1>
+<pre><code class="language-c">{
+    int *x = malloc(sizeof(int));
+
+    *x = 5;
+
+    free(x);
+}
+</code></pre>
+
+<h1 id='lifetimes-3' class='section-header'><a href='#lifetimes-3'>Lifetimes</a></h1>
+<pre class='rust rust-example-rendered'>
+{
+    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='number'>5i32</span>;
+
+    <span class='comment'>// x gets deallocated here</span>
+    <span class='comment'>// x dies horribly</span>
+}</pre>
+
+<h1 id='move--copy' class='section-header'><a href='#move--copy'>Move &amp; Copy</a></h1>
+<p>When you pass data to a function (or even assign it to a variable), that data can be copied, moved, or borrowed (more about it soon).</p>
+
+<h1 id='move--copy-question' class='section-header'><a href='#move--copy-question'>Move &amp; Copy: Question</a></h1>
+<p>Copy? Move? What&#39;s that?!</p>
+
+<p>Raise your hand!</p>
+
+<p><img src="images/fuck_cat.gif" alt=""></p>
+
+<h1 id='copy' class='section-header'><a href='#copy'>Copy</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='number'>5</span>;
+    <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>add_one</span>(<span class='ident'>a</span>);
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>a</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>add_one</span>(<span class='ident'>x</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>
+}</pre>
+
+<h1 id='move' class='section-header'><a href='#move'>Move</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Person</span> {
+    <span class='ident'>name</span>: <span class='ident'>String</span>,
+    <span class='ident'>age</span>: <span class='ident'>u32</span>
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>john</span> <span class='op'>=</span> <span class='ident'>Person</span> { <span class='ident'>name</span>: <span class='string'>&quot;John&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>age</span>: <span class='number'>42</span> };
+    <span class='ident'>show</span>(<span class='ident'>john</span>);
+
+    <span class='comment'>// `john` has already been deallocated</span>
+}
+
+<span class='kw'>fn</span> <span class='ident'>show</span>(<span class='ident'>person</span>: <span class='ident'>Person</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} is {}&quot;</span>, <span class='ident'>person</span>.<span class='ident'>name</span>, <span class='ident'>person</span>.<span class='ident'>age</span>);
+
+    <span class='comment'>// `john` will be deallocated here</span>
+}</pre>
+
+<h1 id='move-1' class='section-header'><a href='#move-1'>Move</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Person</span> {
+    <span class='ident'>name</span>: <span class='ident'>String</span>,
+    <span class='ident'>age</span>: <span class='ident'>u32</span>
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>john</span> <span class='op'>=</span> <span class='ident'>Person</span> { <span class='ident'>name</span>: <span class='string'>&quot;John&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>age</span>: <span class='number'>42</span> };
+    <span class='ident'>show</span>(<span class='ident'>john</span>);
+    <span class='ident'>show</span>(<span class='ident'>john</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>show</span>(<span class='ident'>person</span>: <span class='ident'>Person</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} is {}&quot;</span>, <span class='ident'>person</span>.<span class='ident'>name</span>, <span class='ident'>person</span>.<span class='ident'>age</span>);
+
+    <span class='comment'>// `john` will be deallocated here</span>
+}</pre>
+
+<h1 id='move-2' class='section-header'><a href='#move-2'>Move</a></h1>
+<pre><code class="language-norust">&lt;anon&gt;:9:10: 9:14 error: use of moved value: `john` [E0382]
+&lt;anon&gt;:9     show(john);
+                  ^~~~
+&lt;anon&gt;:9:10: 9:14 help: see the detailed explanation for E0382
+&lt;anon&gt;:8:10: 8:14 note: `john` moved here because it has type `Person`, which is non-copyable
+&lt;anon&gt;:8     show(john);
+                  ^~~~
+error: aborting due to previous error
+</code></pre>
+
+<h1 id='move-3' class='section-header'><a href='#move-3'>Move</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>john</span> <span class='op'>=</span> <span class='ident'>Person</span> { <span class='ident'>name</span>: <span class='string'>&quot;John&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>age</span>: <span class='number'>42</span> };
+
+    <span class='comment'>// `john` moves into show here</span>
+    <span class='ident'>show</span>(<span class='ident'>john</span>);
+    <span class='comment'>// `john` is deallocated by now</span>
+    <span class='comment'>// so the next line doesn&#39;t compile</span>
+    <span class='ident'>show</span>(<span class='ident'>john</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>show</span>(<span class='ident'>person</span>: <span class='ident'>Person</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} is {}&quot;</span>, <span class='ident'>person</span>.<span class='ident'>name</span>, <span class='ident'>person</span>.<span class='ident'>age</span>);
+
+    <span class='comment'>// `john` will be deallocated here</span>
+}</pre>
+
+<h1 id='move-assignment' class='section-header'><a href='#move-assignment'>Move (assignment)</a></h1>
+<p>Assigning a value to a variable is similar to passing it to a function.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>john</span> <span class='op'>=</span> <span class='ident'>Person</span> { <span class='ident'>name</span>: <span class='string'>&quot;John&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>age</span>: <span class='number'>42</span> };
+
+    <span class='comment'>// `john` moves into `john_bis` here</span>
+    <span class='kw'>let</span> <span class='ident'>john_bis</span> <span class='op'>=</span> <span class='ident'>john</span>;
+
+    <span class='comment'>// so the next line won&#39;t compile</span>
+    <span class='ident'>show</span>(<span class='ident'>john</span>);
+}
+
+<span class='kw'>fn</span> <span class='ident'>show</span>(<span class='ident'>person</span>: <span class='ident'>Person</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} is {}&quot;</span>, <span class='ident'>person</span>.<span class='ident'>name</span>, <span class='ident'>person</span>.<span class='ident'>age</span>);
+
+    <span class='comment'>// `john` will be deallocated here</span>
+}</pre>
+
+<h1 id='break-time-3' class='section-header'><a href='#break-time-3'>Break time!</a></h1>
+<p>More water!</p>
+
+<p>Questions? Bathroom break?</p>
+
+<p><img src="images/poop_party.gif" alt="Party hard while pooping animation"></p>
+
+<h1 id='ownership--borrowing' class='section-header'><a href='#ownership--borrowing'>Ownership &amp; Borrowing</a></h1>
+<p>When you create a resource, you&#39;re the <strong>owner</strong> of that resource.</p>
+
+<p>Being an owner gives you some privileges:</p>
+
+<ul>
+<li>You control when that resource is deallocated.</li>
+<li>You may lend that resource, <strong>immutably</strong>, to <strong>as many</strong> borrowers as you&#39;d like.</li>
+<li>You may lend that resource, <strong>mutably</strong>, to a <strong>single</strong> borrower.</li>
+</ul>
+
+<h1 id='ownership--borrowing-1' class='section-header'><a href='#ownership--borrowing-1'>Ownership &amp; Borrowing</a></h1>
+<p>But it also comes with some restrictions:</p>
+
+<ul>
+<li>If someone is borrowing your resource (either mutably or immutably), you may not mutate the resource or mutably lend it to someone.</li>
+<li>If someone is mutably borrowing your resource, you may not lend it out at all (mutably or immutably) or access it in any way.</li>
+</ul>
+
+<h1 id='borrow' class='section-header'><a href='#borrow'>Borrow</a></h1>
+<blockquote>
+<p>You may lend that resource, <strong>immutably</strong>, to <strong>as many</strong> borrowers as you&#39;d like.</p>
+</blockquote>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>john</span> <span class='op'>=</span> <span class='ident'>Person</span> { <span class='ident'>name</span>: <span class='string'>&quot;John&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>age</span>: <span class='number'>42</span> };
+
+    <span class='comment'>// `john` moves into `show`.</span>
+    <span class='ident'>show</span>(<span class='kw-2'>&amp;</span><span class='ident'>john</span>);
+
+    <span class='comment'>// `show` hands us `john` back.</span>
+    <span class='ident'>show</span>(<span class='kw-2'>&amp;</span><span class='ident'>john</span>);
+    <span class='comment'>// the previous line will thus compile.</span>
+}
+
+<span class='kw'>fn</span> <span class='ident'>show</span>(<span class='ident'>person</span>: <span class='kw-2'>&amp;</span><span class='ident'>Person</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} is {}&quot;</span>, <span class='ident'>person</span>.<span class='ident'>name</span>, <span class='ident'>person</span>.<span class='ident'>age</span>);
+}</pre>
+
+<h1 id='borrow-1' class='section-header'><a href='#borrow-1'>Borrow</a></h1>
+<pre><code class="language-norust">John is 42
+John is 42
+</code></pre>
+
+<h1 id='mutable-borrow' class='section-header'><a href='#mutable-borrow'>Mutable borrow</a></h1>
+<blockquote>
+<p>You may lend that resource, <strong>mutably</strong>, to a <strong>single</strong> borrower.</p>
+</blockquote>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>john</span> <span class='op'>=</span> <span class='ident'>Person</span> { <span class='ident'>name</span>: <span class='string'>&quot;John&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>age</span>: <span class='number'>42</span> };
+
+    <span class='ident'>grow_older</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>john</span>);
+
+    <span class='ident'>show</span>(<span class='kw-2'>&amp;</span><span class='ident'>john</span>); <span class='comment'>// John is 43</span>
+}
+
+<span class='kw'>fn</span> <span class='ident'>grow_older</span>(<span class='ident'>person</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Person</span>) {
+    <span class='ident'>person</span>.<span class='ident'>age</span> <span class='op'>+=</span> <span class='number'>1</span>;
+}</pre>
+
+<h1 id='mutable-borrow-1' class='section-header'><a href='#mutable-borrow-1'>Mutable borrow</a></h1>
+<p>The following will compile too, as <code>grow_older</code> gives us <code>john</code> back:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>john</span> <span class='op'>=</span> <span class='ident'>Person</span> { <span class='ident'>name</span>: <span class='string'>&quot;John&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>age</span>: <span class='number'>42</span> };
+    <span class='ident'>show</span>(<span class='kw-2'>&amp;</span><span class='ident'>john</span>); <span class='comment'>// John is 42</span>
+    <span class='ident'>grow_older</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>john</span>);
+    <span class='ident'>grow_older</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>john</span>);
+    <span class='ident'>show</span>(<span class='kw-2'>&amp;</span><span class='ident'>john</span>); <span class='comment'>// John is 44</span>
+}</pre>
+
+<h1 id='mutable-borrow-2' class='section-header'><a href='#mutable-borrow-2'>Mutable borrow</a></h1>
+<p>But this won&#39;t:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>john</span> <span class='op'>=</span> <span class='ident'>Person</span> { <span class='ident'>name</span>: <span class='string'>&quot;John&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>age</span>: <span class='number'>42</span> };
+
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>john_bis</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>john</span>;
+
+    <span class='ident'>grow_older</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>john</span>);
+
+    <span class='ident'>show</span>(<span class='kw-2'>&amp;</span><span class='ident'>john</span>);
+}</pre>
+
+<h1 id='mutable-borrow-3' class='section-header'><a href='#mutable-borrow-3'>Mutable borrow</a></h1>
+<p>Let&#39;s see the error in a <em>live</em> environment: <a href="http://is.gd/CW3zaG">http://is.gd/CW3zaG</a></p>
+
+<pre><code class="language-norust">&lt;anon&gt;:11:21: 11:25 error: cannot borrow `john` as mutable more than once at a time [E0499]
+&lt;anon&gt;:11     grow_older(&amp;mut john);
+                              ^~~~
+&lt;anon&gt;:11:21: 11:25 help: see the detailed explanation for E0499
+&lt;anon&gt;:9:29: 9:33 note: previous borrow of `john` occurs here; the mutable borrow prevents subsequent moves, borrows, or modification of `john` until the borrow ends
+&lt;anon&gt;:9     let mut john_bis = &amp;mut john;
+                                     ^~~~
+&lt;anon&gt;:14:2: 14:2 note: previous borrow ends here
+&lt;anon&gt;:6 fn main() {
+...
+&lt;anon&gt;:14 }
+          ^
+&lt;anon&gt;:13:11: 13:15 error: cannot borrow `john` as immutable because it is also borrowed as mutable [E0502]
+&lt;anon&gt;:13     show(&amp;john);
+                    ^~~~
+&lt;anon&gt;:9:29: 9:33 note: previous borrow of `john` occurs here; the mutable borrow prevents subsequent moves, borrows, or modification of `john` until the borrow ends
+&lt;anon&gt;:9     let mut john_bis = &amp;mut john;
+                                     ^~~~
+&lt;anon&gt;:14:2: 14:2 note: previous borrow ends here
+&lt;anon&gt;:6 fn main() {
+...
+&lt;anon&gt;:14 }
+          ^
+error: aborting due to 2 previous errors
+</code></pre>
+
+<h1 id='mutable-borrow-4' class='section-header'><a href='#mutable-borrow-4'>Mutable borrow</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>john</span> <span class='op'>=</span> <span class='ident'>Person</span> { <span class='ident'>name</span>: <span class='string'>&quot;John&quot;</span>.<span class='ident'>to_string</span>(),
+                            <span class='ident'>age</span>: <span class='number'>42</span> };
+
+    <span class='comment'>// first borrow of `john` as mutable</span>
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>john_bis</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>john</span>;
+
+    <span class='comment'>// `john` cannot be mutably borrowed again, won&#39;t compile</span>
+    <span class='ident'>grow_older</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>john</span>);
+
+    <span class='ident'>show</span>(<span class='kw-2'>&amp;</span><span class='ident'>john</span>);
+}</pre>
+
+<h1 id='high-level-features-1' class='section-header'><a href='#high-level-features-1'>High-level features</a></h1>
+<p><img src="images/infinite_vortex.gif" alt=""></p>
+
+<h1 id='closures' class='section-header'><a href='#closures'>Closures</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>plus_one</span> <span class='op'>=</span> <span class='op'>|</span><span class='ident'>x</span>: <span class='ident'>i32</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>;
+
+<span class='ident'>plus_one</span>(<span class='number'>2</span>) <span class='comment'>// 2</span></pre>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>plus_two</span> <span class='op'>=</span> <span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>result</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='ident'>x</span>;
+
+    <span class='ident'>result</span> <span class='op'>+=</span> <span class='number'>1</span>;
+    <span class='ident'>result</span> <span class='op'>+=</span> <span class='number'>1</span>;
+
+    <span class='ident'>result</span>
+};
+
+<span class='ident'>plus_two</span>(<span class='number'>2</span>) <span class='comment'>// 4</span></pre>
+
+<h1 id='closures-1' class='section-header'><a href='#closures-1'>Closures</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>factor</span> <span class='op'>=</span> <span class='number'>8</span>;
+<span class='kw'>let</span> <span class='ident'>xs</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>(<span class='number'>1i32</span>, <span class='number'>2</span>, <span class='number'>3</span>);
+<span class='kw'>let</span> <span class='ident'>ys</span> <span class='op'>=</span> <span class='ident'>xs</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>*</span> <span class='ident'>factor</span>);
+
+<span class='comment'>// ys == [8, 16, 24]</span></pre>
+
+<h1 id='enums' class='section-header'><a href='#enums'>Enums</a></h1>
+<ul>
+<li>Also called <code>sum types</code> in the literature.</li>
+<li>Similar to Haskell&#39;s <code>data</code> and Scala&#39;s <code>case class</code>.</li>
+</ul>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>enum</span> <span class='ident'>Boolean</span> {
+    <span class='ident'>True</span>,
+    <span class='ident'>False</span>
+}</pre>
+
+<blockquote>
+<p>Rust&#39;s <code>bool</code> type is <strong>not</strong> implemented this way as it is a primitive.</p>
+</blockquote>
+
+<h1 id='enums-1' class='section-header'><a href='#enums-1'>Enums</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>enum</span> <span class='ident'>Boolean</span> {
+    <span class='ident'>True</span>,
+    <span class='ident'>False</span>
+}
+
+<span class='kw'>let</span> <span class='ident'>b</span>: <span class='ident'>Boolean</span> <span class='op'>=</span> <span class='ident'>True</span>;</pre>
+
+<p>A value of type <code>Boolean</code> can be either <code>True</code> or <code>False</code>.</p>
+
+<h1 id='enum' class='section-header'><a href='#enum'>Enum</a></h1>
+<p>From the standard library (almost):</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>enum</span> <span class='ident'>Ordering</span> { <span class='ident'>Less</span>, <span class='ident'>Equal</span>, <span class='ident'>Greater</span> }
+
+<span class='kw'>fn</span> <span class='ident'>cmp</span>(<span class='ident'>a</span>: <span class='ident'>i32</span>, <span class='ident'>b</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span> {
+    <span class='kw'>if</span>      <span class='ident'>a</span> <span class='op'>&lt;</span> <span class='ident'>b</span> { <span class='ident'>Less</span> }
+    <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>a</span> <span class='op'>&gt;</span> <span class='ident'>b</span> { <span class='ident'>Greater</span> }
+    <span class='kw'>else</span>          { <span class='ident'>Equal</span> }
+}
+
+<span class='kw'>let</span> <span class='ident'>ordering</span> <span class='op'>=</span> <span class='ident'>cmp</span>(<span class='ident'>x</span>, <span class='ident'>y</span>);
+
+<span class='kw'>if</span> <span class='ident'>ordering</span> <span class='op'>==</span> <span class='ident'>Less</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;less&quot;</span>);
+} <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>ordering</span> <span class='op'>==</span> <span class='ident'>Greater</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;greater&quot;</span>);
+} <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>ordering</span> <span class='op'>==</span> <span class='ident'>Equal</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;equal&quot;</span>);
+}</pre>
+
+<h1 id='pattern-matching' class='section-header'><a href='#pattern-matching'>Pattern matching</a></h1>
+<p>Rust provides pattern matching, which lets you rewrite this:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>if</span> <span class='ident'>ordering</span> <span class='op'>==</span> <span class='ident'>Less</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;less&quot;</span>);
+} <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>ordering</span> <span class='op'>==</span> <span class='ident'>Greater</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;greater&quot;</span>);
+} <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>ordering</span> <span class='op'>==</span> <span class='ident'>Equal</span> {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;equal&quot;</span>);
+}</pre>
+
+<h1 id='pattern-matching-1' class='section-header'><a href='#pattern-matching-1'>Pattern matching</a></h1>
+<p>as this:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>match</span> <span class='ident'>ordering</span> {
+    <span class='ident'>Less</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;less&quot;</span>),
+    <span class='ident'>Greater</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;greater&quot;</span>),
+    <span class='ident'>Equal</span>   <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;equal&quot;</span>)
+}</pre>
+
+<h1 id='pattern-matching-2' class='section-header'><a href='#pattern-matching-2'>Pattern matching</a></h1>
+<p>It also works with primitives:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>5i32</span>;
+
+<span class='kw'>match</span> <span class='ident'>i</span> {
+    <span class='number'>0</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;zero&quot;</span>),
+    <span class='number'>1</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;one&quot;</span>),
+    _ <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;&gt; 1&quot;</span>)
+}</pre>
+
+<h1 id='pattern-matching-3' class='section-header'><a href='#pattern-matching-3'>Pattern matching</a></h1>
+<p>Patterns must be exhaustive:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>match</span> <span class='ident'>ordering</span> {
+    <span class='ident'>Less</span>    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;less&quot;</span>),
+    <span class='ident'>Greater</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;greater&quot;</span>)
+}</pre>
+
+<blockquote>
+<p>error: non-exhaustive patterns: <code>Equal</code> not covered [E0004]</p>
+</blockquote>
+
+<h1 id='pattern-matching-4' class='section-header'><a href='#pattern-matching-4'>Pattern matching</a></h1>
+<p>There&#39;s a &quot;catch-all&quot; pattern: <code>_</code>.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>match</span> <span class='ident'>ordering</span> {
+    <span class='ident'>Less</span> <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;less&quot;</span>),
+    _    <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;not less&quot;</span>)
+}</pre>
+
+<blockquote>
+<p>error: non-exhaustive patterns: <code>Equal</code> not covered [E0004]</p>
+</blockquote>
+
+<h1 id='back-to-enums' class='section-header'><a href='#back-to-enums'>Back to enums</a></h1>
+<p>Enums can also store data. One simple example is the built-in <code>Option</code> type. Here&#39;s how it is defined in the standard library:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>enum</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='prelude-val'>None</span>,
+    <span class='prelude-val'>Some</span>(<span class='ident'>T</span>),
+}</pre>
+
+<p>The type <code>Option&lt;T&gt;</code> represents an optional value of type <code>T</code>.</p>
+
+<p>An <code>Option</code> is either</p>
+
+<ul>
+<li><code>Some</code>, and contains a value of type <code>T</code></li>
+<li><code>None</code>, and does not contain anything</li>
+</ul>
+
+<h1 id='option' class='section-header'><a href='#option'>Option</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>opt</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='number'>5</span>);
+
+<span class='kw'>let</span> <span class='ident'>opt_plus_two</span> <span class='op'>=</span> <span class='ident'>opt</span> <span class='op'>+</span> <span class='number'>2</span>;</pre>
+
+<blockquote>
+<p>error: binary operation <code>+</code> cannot be applied to type <code>core::option::Option&lt;i32&gt;</code></p>
+</blockquote>
+
+<h1 id='option-1' class='section-header'><a href='#option-1'>Option</a></h1>
+<p>To make use of the value inside an <code>Option</code>, we must pattern-match on it:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>opt</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='number'>5</span>);
+
+<span class='kw'>let</span> <span class='ident'>opt_plus_two</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>opt</span> {
+    <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>2</span>,
+    <span class='prelude-val'>None</span>    <span class='op'>=&gt;</span> <span class='op'>-</span><span class='number'>1</span>
+}</pre>
+
+<p>This forces us to handle the case where there might be no value.</p>
+
+<h1 id='option-2' class='section-header'><a href='#option-2'>Option</a></h1>
+<p>Options have a number of uses in Rust:</p>
+
+<ul>
+<li>Initial values</li>
+<li>Return values for functions that are not defined over their entire input range (partial functions)</li>
+<li>Return value for otherwise reporting simple errors, where None is returned on error</li>
+<li>Optional struct fields</li>
+<li>Optional function arguments</li>
+<li>Nullable pointers</li>
+</ul>
+
+<h1 id='option-3' class='section-header'><a href='#option-3'>Option</a></h1>
+<p><code>Option</code> also provides a few convenience methods:</p>
+
+<ul>
+<li><code>fn is_some(&amp;self) -&gt; bool</code></li>
+<li><code>fn is_none(&amp;self) -&gt; bool</code></li>
+<li><code>fn unwrap_or(self, def: T) -&gt; T</code></li>
+<li><code>fn unwrap(self) -&gt; T</code> <strong>Use with caution</strong></li>
+</ul>
+
+<h1 id='option-4' class='section-header'><a href='#option-4'>Option</a></h1>
+<p>A couple more:</p>
+
+<ul>
+<li><code>fn map&lt;U, F&gt;(self, f: F) -&gt; Option&lt;U&gt; where F: FnOnce(T) -&gt; U</code></li>
+<li><code>fn and_then&lt;U, F&gt;(self, f: F) -&gt; Option&lt;U&gt; where F: FnOnce(T) -&gt; Option&lt;U&gt;</code></li>
+</ul>
+
+<h1 id='option-5' class='section-header'><a href='#option-5'>Option</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>get_name</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> { <span class='comment'>/* ... */</span> }
+
+<span class='kw'>let</span> <span class='ident'>name</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>get_name</span>();
+
+<span class='kw'>let</span> <span class='ident'>display_name</span> <span class='op'>=</span> <span class='ident'>name</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>n</span><span class='op'>|</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;My name is {}&quot;</span>, <span class='ident'>n</span>))
+                       .<span class='ident'>unwrap_or</span>(<span class='string'>&quot;I don&#39;t have a name&quot;</span>);
+
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='ident'>display_name</span>);</pre>
+
+<p>If <code>get_name()</code> returns <code>Some(&quot;Marie&quot;)</code>, this will print <code>My name is Marie</code>, and if it returns <code>None</code>, this will print <code>I don&#39;t have a name</code>.</p>
+
+<h1 id='break-time-4' class='section-header'><a href='#break-time-4'>Break time!</a></h1>
+<p>More water!</p>
+
+<p>Questions? Bathroom break?</p>
+
+<p><img src="images/poop_party.gif" alt="Party hard while pooping animation"></p>
+
+<h1 id='traits' class='section-header'><a href='#traits'>Traits</a></h1>
+<ul>
+<li>No inheritance in Rust :)</li>
+<li>No interfaces either...</li>
+<li>Instead Rust provides a mechanism called <code>traits</code>.</li>
+</ul>
+
+<h1 id='traits-1' class='section-header'><a href='#traits-1'>Traits</a></h1>
+<p>A trait is a sort of interface that defines some behavior.
+If a type implements a trait, that means that it supports and implements the behavior the trait describes.</p>
+
+<h1 id='traits-2' class='section-header'><a href='#traits-2'>Traits</a></h1>
+<p>You can think of them as (better) Java interfaces. They are in fact very similar to Haskell&#39;s typeclasses.</p>
+
+<p>One of the main differences is that you can define a trait implementation separately from the struct definition, even in another module. This means that you can eg. implement a trait you defined yourself for a type provided by a library.</p>
+
+<p>They&#39;re also much more powerful (but won&#39;t get into too much detail here).</p>
+
+<h1 id='traits-3' class='section-header'><a href='#traits-3'>Traits</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Rectangle</span> { <span class='ident'>width</span>: <span class='ident'>f32</span>, <span class='ident'>height</span>: <span class='ident'>f32</span> }
+
+<span class='kw'>trait</span> <span class='ident'>HasArea</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f32</span>;
+}
+
+<span class='kw'>impl</span> <span class='ident'>HasArea</span> <span class='kw'>for</span> <span class='ident'>Rectangle</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f32</span> {
+        <span class='self'>self</span>.<span class='ident'>width</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>height</span>
+    }
+}</pre>
+
+<h1 id='traits-4' class='section-header'><a href='#traits-4'>Traits</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>rect</span> <span class='op'>=</span> <span class='ident'>Rectangle</span> {
+        <span class='ident'>width</span>: <span class='number'>1.2</span>,
+        <span class='ident'>height</span>: <span class='number'>4.9</span>
+    };
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>react</span>.<span class='ident'>area</span>());
+}</pre>
+
+<h1 id='traits-5' class='section-header'><a href='#traits-5'>Traits</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>Circle</span> { <span class='ident'>radius</span>: <span class='ident'>f32</span> }
+
+<span class='kw'>impl</span> <span class='ident'>HasArea</span> <span class='kw'>for</span> <span class='ident'>Circle</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f32</span> {
+        <span class='ident'>std</span>::<span class='ident'>f32</span>::<span class='ident'>consts</span>::<span class='ident'>PI</span> <span class='op'>*</span> (<span class='self'>self</span>.<span class='ident'>radius</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>radius</span>)
+    }
+}</pre>
+
+<h1 id='traits-6' class='section-header'><a href='#traits-6'>Traits</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>print_area</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>shape</span>: <span class='ident'>T</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;This shape has an area of {}&quot;</span>, <span class='ident'>shape</span>.<span class='ident'>area</span>());
+}</pre>
+
+<blockquote>
+<p>error: type <code>T</code> does not implement any method in scope named <code>area</code></p>
+</blockquote>
+
+<h1 id='traits-7' class='section-header'><a href='#traits-7'>Traits</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>print_area</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>HasArea</span><span class='op'>&gt;</span>(<span class='ident'>shape</span>: <span class='ident'>T</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;This shape has an area of {}&quot;</span>, <span class='ident'>shape</span>.<span class='ident'>area</span>());
+}</pre>
+
+<h1 id='traits-8' class='section-header'><a href='#traits-8'>Traits</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>fn</span> <span class='ident'>print_area</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>HasArea</span><span class='op'>&gt;</span>(<span class='ident'>shape</span>: <span class='ident'>T</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;This shape has an area of {}&quot;</span>, <span class='ident'>shape</span>.<span class='ident'>area</span>());
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>Circle</span> { <span class='ident'>radius</span>: <span class='number'>1.0</span> };
+    <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>Rectangle</span> { <span class='ident'>width</span>: <span class='number'>3.0</span>, <span class='ident'>height</span>: <span class='number'>2.0</span> };
+
+    <span class='ident'>print_area</span>(<span class='ident'>c</span>);
+    <span class='ident'>print_area</span>(<span class='ident'>r</span>);
+}</pre>
+
+<blockquote>
+<p>This shape has an area of 3.141592654
+This shape has an area of 6.0</p>
+</blockquote>
+
+<h1 id='traits-9' class='section-header'><a href='#traits-9'>Traits</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='ident'>print_area</span>(<span class='number'>10i32</span>);</pre>
+
+<blockquote>
+<p>error: the trait <code>HasArea</code> is not implemented for the type <code>i32</code></p>
+</blockquote>
+
+<h1 id='traits-10' class='section-header'><a href='#traits-10'>Traits</a></h1>
+<p>We can implement traits for any type. So this would work, even if it makes no sense:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>impl</span> <span class='ident'>HasArea</span> <span class='kw'>for</span> <span class='ident'>i32</span> {
+    <span class='kw'>fn</span> <span class='ident'>area</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>f32</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;this is silly&quot;</span>);
+        <span class='op'>*</span><span class='self'>self</span> <span class='kw'>as</span> <span class='ident'>f32</span>
+    }
+}
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='number'>10i32</span>.<span class='ident'>area</span>();
+    <span class='ident'>print_area</span>(<span class='number'>10i</span>);
+}</pre>
+
+<p>Implementing traits for primitive types should generally be avoided.</p>
+
+<h1 id='traits-11' class='section-header'><a href='#traits-11'>Traits</a></h1>
+<p>One restriction:</p>
+
+<blockquote>
+<p>Either the trait or the type you&#39;re writing the <code>impl</code> for must be inside your crate (i.e. your library).</p>
+</blockquote>
+
+<h1 id='exercise-3-battleship' class='section-header'><a href='#exercise-3-battleship'>Exercise #3: Battleship</a></h1>
+<p><img src="images/battleship.gif" alt=""></p>
+
+<p>Rules:</p>
+
+<ul>
+<li>Two players</li>
+<li>Each player has two 10x10 grids</li>
+<li>Whatever strategy you want</li>
+</ul>
+
+<p>I&#39;ll setup a matchmaking server to test implementations and find who&#39;s best!</p>
+
+<p>More details soon :)</p>
+
+<h1 id='iterators' class='section-header'><a href='#iterators'>Iterators</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='number'>0i32</span>..<span class='number'>10</span> {
+    <span class='comment'>// do stuff</span>
+}</pre>
+
+<p><code>Iterator&lt;T&gt;</code> provides a <code>next()</code> function that we can call repeatedly to get a sequence of values, each wrapped in <code>Some</code>. When no more values are available, <code>next()</code> returns <code>None</code>.</p>
+
+<h1 id='iterators-1' class='section-header'><a href='#iterators-1'>Iterators</a></h1>
+<p>The <code>for</code> loop on the previous slide can be written like this:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>range</span> <span class='op'>=</span> <span class='number'>0i32</span>..<span class='number'>10</span>;
+
+<span class='kw'>loop</span> {
+    <span class='kw'>match</span> <span class='ident'>range</span>.<span class='ident'>next</span>() {
+        <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> {
+            <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>x</span>);
+        },
+        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> { <span class='kw'>break</span> }
+    }
+}</pre>
+
+<h1 id='iterators-2' class='section-header'><a href='#iterators-2'>Iterators</a></h1>
+<p>Vectors can be iterated over too. <code>Vec&lt;T&gt;</code> provides an <code>iter()</code> method which returns an <code>Iterator&lt;&amp;T&gt;</code> that we can use to iterate over the elements.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>nums</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1i32</span>, <span class='number'>2</span>, <span class='number'>3</span>];
+
+<span class='kw'>for</span> <span class='ident'>num</span> <span class='kw'>in</span> <span class='ident'>nums</span>.<span class='ident'>iter</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>num</span>);
+}</pre>
+
+<h1 id='iterators-3' class='section-header'><a href='#iterators-3'>Iterators</a></h1>
+<p><code>Iterator</code> provides methods such as <code>map</code>, <code>filter</code>, <code>take</code>, and friends.</p>
+
+<h1 id='consumers' class='section-header'><a href='#consumers'>Consumers</a></h1>
+<p><code>Iterator</code>s are not collections, they just allow to iterate over a (potentially infinite) sequence of elements.</p>
+
+<p>It is possible to turn an <code>Iterator</code> into a collection with the <code>collect</code> method.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> [<span class='number'>1i32</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>5</span>];
+<span class='kw'>let</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>+</span> <span class='number'>1</span>);
+
+<span class='kw'>let</span> <span class='ident'>a_plus_one</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>iter</span>.<span class='ident'>collect</span>();
+<span class='comment'>// a_plus_one = [2i32, 3, 4, 5, 6];</span></pre>
+
+<p>The type annotation is mandatory. <code>let a_plus_one = iter.collect();</code> would throw an error.</p>
+
+<h1 id='macros' class='section-header'><a href='#macros'>Macros</a></h1>
+<p>You have already seen them. <code>println!()</code> is a macro. They&#39;re distinguishable by the <code>!</code> at the end of the function name.</p>
+
+<p>For another talk!</p>
+
+<h1 id='crates-and-modules' class='section-header'><a href='#crates-and-modules'>Crates and modules</a></h1>
+<p>A &quot;crate&quot; in Rust is what you&#39;d call a &quot;package&quot; or &quot;library&quot; in other languages. A crate contains modules (which can contain other modules).</p>
+
+<p>If we have a <code>greetings</code> crate that contains a public module <code>english</code> that defines a public method <code>hello()</code>, we&#39;d use it like this:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>greetings</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='ident'>greetings</span>::<span class='ident'>english</span>::<span class='ident'>hello</span>();
+}</pre>
+
+<h1 id='modules' class='section-header'><a href='#modules'>Modules</a></h1>
+<p>The <code>use</code> keyword imports names in the local scope.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>greetings</span>;
+<span class='kw'>use</span> <span class='ident'>greetings</span>::<span class='ident'>english</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='ident'>english</span>::<span class='ident'>hello</span>();
+}</pre>
+
+<h1 id='thank-you' class='section-header'><a href='#thank-you'>Thank you!</a></h1>
+<p>Questions?</p>
+
+<h1 id='references' class='section-header'><a href='#references'>References</a></h1>
+<ul>
+<li><a href="https://doc.rust-lang.org/stable/book/">https://doc.rust-lang.org/stable/book/</a></li>
+<li><a href="https://github.com/kmcallister/sliderust">https://github.com/kmcallister/sliderust</a></li>
+<li>A lot more I forgot to note down</li>
+</ul>
+
+    <script type="text/javascript">
+        window.playgroundUrl = "";
+    </script>
+    
+</body>
+</html>
